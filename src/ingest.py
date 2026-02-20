@@ -43,6 +43,17 @@ def ingest_pdf():
             print(f"Injetando Documentos:: Lote {i//batch_size + 1}/{(len(chunks) + batch_size - 1)//batch_size}", flush=True)
             time.sleep(2) # Tratativa para evitar Rate Limit (429) em Tiers gratuitos
 
+        # --- ALTERNATIVA PARA TIER GRATUITO GEMINI RIGOROSO (15 RPM) ---
+        # Caso esteja recebendo erro 429 (Resource Exhausted) no Google Gemini Free Tier,
+        # comente o bloco `for` acima e descomente o bloco abaixo:
+        #
+        # batch_size = 1
+        # for i in range(0, len(chunks), batch_size):
+        #     batch = chunks[i:i + batch_size]
+        #     vector_store.add_documents(batch)
+        #     print(f"Injetando Documentos:: Lote {i//batch_size + 1}/{(len(chunks) + batch_size - 1)//batch_size}", flush=True)
+        #     time.sleep(4) # Tratativa rigorosa para a cota de 15 RPM do Gemini Free Tier
+
         print("Ingestão concluída com sucesso!")
     except Exception as e:
         print(f"Erro durante a ingestão: {e}")
